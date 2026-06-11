@@ -379,6 +379,8 @@ Then build the smart contract using `CompiledContract` API from `@midnight-ntwrk
       const compiledContract = CompiledContract.withCompiledFileAssets(ccWithWitnesses, ZK_ARTIFACTS_PATH);
 ```
 
+> **Note on casts:** You will see `as any` and `as never` throughout the deploy, attest, and prove code. These work around SDK type-resolution friction at the `compact-js` / `midnight-js` boundary — the generated contract types and the provider types do not always align at compile time. They are safe at runtime, but they are not best practice for production code. If you are building your own DApp, prefer proper type narrowing or a thin wrapper over casting.
+
 Then the next step is to deploy, passing `authoritySk` as an argument. This makes the admin deploying the smart contract an authority with the ability to create attestations.
 
 ```typescript
