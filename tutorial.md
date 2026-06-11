@@ -45,30 +45,48 @@ Run the frontend with `npm run dev`. If you want the analytics server, run `cd n
 ## Prerequisites
 
 - Node.js installed (v20+)
-- A Midnight Wallet (e.g., 1AM or Lace)
+- The Compact compiler installed (`compact --version`)
+- A Midnight wallet extension (e.g., 1AM or Lace)
 - Some Preprod [faucet](https://faucet.preprod.midnight.network/) NIGHT tokens
-- A [`package.json`](https://github.com/0xfdbu/midnight-attestation-dapp/blob/main/package.json) with the needed packages
-  - `@midnight-ntwrk/compact-runtime`
-  - `@midnight-ntwrk/dapp-connector-api`
-  - `@midnight-ntwrk/ledger-v8`
-  - `@midnight-ntwrk/midnight-js-contracts`
-  - `@midnight-ntwrk/midnight-js-dapp-connector-proof-provider`
-  - `@midnight-ntwrk/midnight-js-fetch-zk-config-provider`
-  - `@midnight-ntwrk/midnight-js-http-client-proof-provider`
-  - `@midnight-ntwrk/midnight-js-indexer-public-data-provider`
-  - `@midnight-ntwrk/midnight-js-level-private-state-provider`
-  - `@midnight-ntwrk/midnight-js-network-id`
-  - `@midnight-ntwrk/midnight-js-node-zk-config-provider`
-  - `@midnight-ntwrk/midnight-js-types`
-  - `@midnight-ntwrk/wallet-sdk-address-format`
-  - `@midnight-ntwrk/wallet-sdk-dust-wallet`
-  - `@midnight-ntwrk/wallet-sdk-facade`
-  - `@midnight-ntwrk/wallet-sdk-hd`
-  - `@midnight-ntwrk/wallet-sdk-shielded`
-  - `@midnight-ntwrk/wallet-sdk-unshielded-wallet`
-  - `@scure/bip39`, `cors`, `express`, `postgres`, `react`, `react-dom`, `react-router-dom`, `rxjs`, `semver`, `vite-plugin-node-polyfills`, `vite-plugin-top-level-await`, `vite-plugin-wasm`, `ws`, `zustand`
+- (Optional) PostgreSQL if you want to run the analytics server
 
----
+## Dependencies
+
+The project builds on the Midnight.js SDK. These packages handle the heavy lifting:
+
+- `@midnight-ntwrk/dapp-connector-api` — wallet connection
+- `@midnight-ntwrk/midnight-js-contracts` — contract deployment and calls
+- `@midnight-ntwrk/midnight-js-indexer-public-data-provider` — on-chain state queries
+- `@midnight-ntwrk/midnight-js-dapp-connector-proof-provider` — wallet-backed proof generation
+- `@midnight-ntwrk/ledger-v8` — transaction serialization
+
+They are installed automatically with `npm install`. See [`package.json`](https://github.com/0xfdbu/midnight-attestation-dapp/blob/main/package.json) for the full list.
+
+## How the app works
+
+There are three roles:
+
+- **Authority** — an organization that verifies a user's age off-chain and issues an on-chain attestation.
+- **User** — someone who wants to prove they meet the age requirement without revealing their identity or exact age.
+- **Verifier** — anyone who checks the proof result on-chain. In this DApp, the verifier is built into the frontend and contract logic.
+
+### Public vs private
+
+| Public (on-chain) | Private (off-chain / wallet) |
+|---|---|
+| Merkle root of attested commitments | User's secret key |
+| Total proof counts | Which commitment belongs to which user |
+| Nullifier set (prevents double-proving) | The actual credential data |
+
+### End-to-end flow
+
+1. The user derives a secret key from their wallet + password.
+2. The user computes a public commitment and gives it to the authority.
+3. The authority inserts the commitment into a Merkle tree on-chain.
+4. Later, the user proves their commitment is in the tree — without revealing which one it is.
+5. The contract checks the proof and records a nullifier so the user cannot prove twice.
+
+With that mental model in place, the contract code below should land with purpose.
 
 ## 1. Building the smart contract
 
