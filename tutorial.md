@@ -1,3 +1,5 @@
+# Build a full-stack private age-verification DApp on Midnight
+
 📁 **Full source code and installation steps:** [midnight-attestation-dapp](https://github.com/0xfdbu/midnight-attestation-dapp)
 
 **Target audience:** Developers
@@ -6,7 +8,7 @@ Within the next few sections, you go through smart contract compilation and focu
 
 ## What you'll build
 
-You build a full-stack private age-verification DApp on Midnight. An authority can attest that a user meets an age requirement, and the user can later prove it with a zero-knowledge proof — without revealing their identity, age, or which attestation is theirs.
+You build a full-stack private age-verification DApp on Midnight. An authority can attest that a user meets an age requirement, and the user can later prove it with a zero-knowledge proof — without revealing their identity or age.
 
 By the end of this tutorial, you have:
 
@@ -54,7 +56,7 @@ Run the frontend with `npm run dev`. If you want the analytics server, run `cd n
 
 The project builds on the Midnight.js SDK. These packages handle the heavy lifting:
 
-- `@midnight-ntwrk/dapp-connector-api` at `^4.0.1` — v4 wallet connector API
+- `@midnight-ntwrk/dapp-connector-api` at `^4.0.1` — v4 DApp connector API
 - `@midnight-ntwrk/midnight-js-contracts` — contract deployment and calls
 - `@midnight-ntwrk/midnight-js-indexer-public-data-provider` — on-chain state queries
 - `@midnight-ntwrk/midnight-js-dapp-connector-proof-provider` — wallet-backed proof generation
@@ -67,8 +69,8 @@ They are installed automatically with `npm install`. See [`package.json`](https:
 There are three roles:
 
 - **Authority** — an organization that verifies a user's age off-chain and issues an on-chain attestation. In the frontend, this is the Deploy + Attest flow.
-- **User** — someone who wants to prove they meet the age requirement without revealing their identity or exact age. In the frontend, this is the Prove flow.
-- **Verifier** — anyone who checks the zero-knowledge proof result on-chain. In this DApp, the verifier is built into the frontend and smart contract logic: the smart contract validates the proof, and anyone can read the public counters.
+- **User** — if someone wants to prove they meet the age requirements without revealing their exact age. In the frontend, this is the Prove flow.
+- **Verifier** — anyone who checks the zero-knowledge proof result on-chain. In this DApp, the verifier lives in the frontend and smart contract logic: the smart contract validates the proof, and anyone can read the public counters, e.g., `totalAgeProofs`.
 
 ### What stays public vs private
 
@@ -84,11 +86,11 @@ There are three roles:
 2. The user computes a public commitment and gives it to the authority.
 3. The authority inserts the commitment into a Merkle tree on-chain.
 4. Later, the user proves their commitment is in the tree — without revealing which leaf it is.
-5. The contract checks the proof and records a nullifier so the user cannot prove twice.
+5. The smart contract checks the proof and records a nullifier so the user can only prove once.
 
 ![End-to-end flow diagram](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/d6pc2y15cywmckx7ncpf.png)
 
-With that mental model in place, the contract code below should land with purpose.
+With that mental model in place, the smart contract code below should land with purpose.
 
 ## 1. Building the smart contract
 
@@ -102,7 +104,7 @@ witness localSecretKey(): Bytes<32>;
 witness findAgePath(commit: Bytes<32>): MerkleTreePath<10, Bytes<32>>;
 ```
 
-For this attestation you need two core witnesses. `localSecretKey()` will be used to fetch the user's secret key, and `findAgePath(commit: Bytes<32>)` fetches the required cryptographic Merkle path from the local private state and passes it to the circuit(s) as needed.
+For this attestation you need two core witnesses. `localSecretKey()` fetches the user's secret key, and `findAgePath(commit: Bytes<32>)` fetches the required cryptographic Merkle path from the local private state and passes it to the circuit(s) as needed.
 
 You also need some essential ledgers:
 
@@ -214,7 +216,7 @@ export circuit proveAge(): Boolean {
 }
 ```
 
-> **Note:** The `domain` parameter lets the same contract pattern extend to other attestation types — residency, certification, and so on. The full repo includes those circuits; this tutorial focuses on `age` to keep the walkthrough concise.
+> **Note:** The `domain` parameter lets the same smart contract pattern extend to other attestation types — residency, certification, and so on. The full repo includes those circuits; this tutorial focuses on `age` to keep the walkthrough concise.
 
 You now need to compile this smart contract, but first install compact dev tools
 
@@ -223,13 +225,13 @@ curl --proto '=https' --tlsv1.2 -LsSf \
   https://github.com/midnightntwrk/compact/releases/latest/download/compact-installer.sh | sh
 ```
 
-Then run `compact compile contracts/Contract.compact src/contracts`. In this case, you can assume `src/contracts` is a directory your frontend and API will use to load the compiled smart contract (ZKIR, keys, etc.).
+Then run `compact compile contracts/Contract.compact src/contracts`. In this case, `src/contracts` is the directory your frontend and API use to load the compiled smart contract (ZKIR, keys, etc.).
 
 ---
 
 ## 2. Wallet, identity & providers
 
-You begin by setting up a wallet connection. The project uses `@midnight-ntwrk/dapp-connector-api` at `^4.0.1`, which exposes the v4 wallet connector API.
+You begin by setting up a wallet connection. The project uses `@midnight-ntwrk/dapp-connector-api` at `^4.0.1`, which exposes the v4 DApp connector API.
 
 ```typescript
 import type { InitialAPI } from '@midnight-ntwrk/dapp-connector-api';
@@ -320,7 +322,7 @@ export const createAttestPrivateState = (
 });
 ```
 
-Then you have two witnesses set up. `localSecretKey()` will be used to fetch the user's secret key, and `findAgePath(commit: Bytes<32>)` fetches the required cryptographic Merkle path from the local private state and passes it to the circuit(s) as needed.
+Then you have two witnesses set up. `localSecretKey()` fetches the user's secret key, and `findAgePath(commit: Bytes<32>)` fetches the required cryptographic Merkle path from the local private state and passes it to the circuit(s) as needed.
 
 ```typescript
 export const witnesses = {
@@ -391,7 +393,7 @@ Then build the smart contract using `CompiledContract` API from `@midnight-ntwrk
       const compiledContract = CompiledContract.withCompiledFileAssets(ccWithWitnesses, ZK_ARTIFACTS_PATH);
 ```
 
-> **Note on casts:** You will see `as any` and `as never` throughout the deploy, attest, and prove code. These work around SDK type-resolution friction at the `compact-js` / `midnight-js` boundary however the generated contract types and the provider types do not always align at compile time. They are safe at runtime, but they are not best practice for production code. If you are building your own DApp, use proper type narrowing or a thin wrapper over casting.
+> **Note on casts:** You will see `as any` and `as never` throughout the deploy, attest, and prove code. These work around SDK type-resolution friction at the `compact-js` / `midnight-js` boundary, but the generated contract types and the provider types do not always align at compile time. They are safe at runtime, but they are not best practice for production code. If you are building your own DApp, prefer proper type narrowing or a thin wrapper over casting.
 
 Then the next step is to deploy, passing `authoritySk` as an argument. This makes the admin deploying the smart contract an authority with the ability to create attestations.
 
@@ -584,7 +586,7 @@ The user verifies and generates a proof in [`Prove.tsx`](https://github.com/0xfd
       }
 ```
 
-**Important:** Because the commitment is generated with a domain separator eg: `age`, `residency`. You can decide to have your UI compute a commitment based on the type of proof selected. However if you gave the attestation authority a commitment generated using `residency` domain separator and you try to prove `age` then proof generation will fail if no attestation for `age` exists.
+**Important:** The commitment is generated with a domain separator, e.g., `age` or `residency`. You can decide to have your UI compute a commitment based on the type of proof selected. However, if you gave the attestation authority a commitment generated using the `residency` domain separator and you try to prove `age`, proof generation fails if no attestation for `age` exists.
 
 
 
@@ -772,7 +774,7 @@ You have now built a full-stack DApp on the Midnight network: a complete zero-kn
 
 Now that you've finished this tutorial, here are a few things you can do next:
 
-- Check the full repository [source code](https://github.com/0xfdbu/midnight-attestation-dapp)
+- [View the full source code in the midnight-attestation-dapp repository](https://github.com/0xfdbu/midnight-attestation-dapp)
 - Add a new credential type e.g., "employment"
 - Read the Midnight Compact language docs
 
