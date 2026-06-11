@@ -4,6 +4,44 @@
 
 Within the next few sections, you go through smart contract compilation and focus on the DApp lifecycle.
 
+## What you'll build
+
+You build a full-stack private age-verification DApp on Midnight. An authority can attest that a user meets an age requirement, and the user can later prove it with a zero-knowledge proof — without revealing their identity, age, or which attestation is theirs.
+
+By the end of this tutorial, you have:
+
+- A Compact smart contract (`contracts/Contract.compact`) that stores age commitments in a Merkle tree, tracks nullifiers, and exposes `attestAge` and `proveAge` circuits.
+- A React frontend with flows for deploying the contract, generating a commitment, attesting a user, and generating a ZK proof.
+- An optional Express + PostgreSQL analytics server (`node-analytics/server.ts`) that polls the indexer and caches proof counts.
+
+## Project setup
+
+Start with the standalone repository:
+
+```bash
+git clone https://github.com/0xfdbu/midnight-attestation-dapp.git
+cd midnight-attestation-dapp
+npm install
+```
+
+The finished project structure looks like this:
+
+```text
+midnight-attestation-dapp/
+├── contracts/
+│   └── Contract.compact              # ZK attestation contract
+├── src/
+│   ├── pages/                        # React pages (Home, Deploy, Attest, Prove)
+│   ├── hooks/wallet/services/        # Provider builder, contract API, witness binding
+│   └── components/                   # Wallet UI components
+├── node-analytics/
+│   └── server.ts                     # Off-chain indexer polling API
+├── package.json
+└── tutorial.md                       # This guide
+```
+
+Run the frontend with `npm run dev`. If you want the analytics server, run `cd node-analytics && npm install && npm run dev` in a separate terminal.
+
 ## Prerequisites
 
 - Node.js installed (v20+)
