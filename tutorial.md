@@ -66,11 +66,11 @@ They are installed automatically with `npm install`. See [`package.json`](https:
 
 There are three roles:
 
-- **Authority** — an organization that verifies a user's age off-chain and issues an on-chain attestation.
-- **User** — someone who wants to prove they meet the age requirement without revealing their identity or exact age.
-- **Verifier** — anyone who checks the proof result on-chain. In this DApp, the verifier is built into the frontend and contract logic.
+- **Authority** — an organization that verifies a user's age off-chain and issues an on-chain attestation. In the frontend, this is the Deploy + Attest flow.
+- **User** — someone who wants to prove they meet the age requirement without revealing their identity or exact age. In the frontend, this is the Prove flow.
+- **Verifier** — anyone who checks the proof result on-chain. In this DApp, the verifier is built into the frontend and contract logic: the contract validates the proof, and anyone can read the public counters.
 
-### Public vs private
+### What stays public vs private
 
 | Public (on-chain) | Private (off-chain / wallet) |
 |---|---|
@@ -83,8 +83,10 @@ There are three roles:
 1. The user derives a secret key from their wallet + password.
 2. The user computes a public commitment and gives it to the authority.
 3. The authority inserts the commitment into a Merkle tree on-chain.
-4. Later, the user proves their commitment is in the tree — without revealing which one it is.
+4. Later, the user proves their commitment is in the tree — without revealing which leaf it is.
 5. The contract checks the proof and records a nullifier so the user cannot prove twice.
+
+![End-to-end flow diagram](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/d6pc2y15cywmckx7ncpf.png)
 
 With that mental model in place, the contract code below should land with purpose.
 
