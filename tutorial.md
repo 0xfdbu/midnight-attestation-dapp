@@ -1,4 +1,4 @@
-# Build a full-stack private age-verification DApp on Midnight
+# Build a full-stack private age-verification DApp on Midnight with ZK attestations
 
 📁 **Full source code and installation steps:** [midnight-attestation-dapp](https://github.com/0xfdbu/midnight-attestation-dapp)
 
