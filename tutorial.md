@@ -54,7 +54,7 @@ Run the frontend with `npm run dev`. If you want the analytics server, run `cd n
 
 The project builds on the Midnight.js SDK. These packages handle the heavy lifting:
 
-- `@midnight-ntwrk/dapp-connector-api` — wallet connection
+- `@midnight-ntwrk/dapp-connector-api` at `^4.0.1` — v4 wallet connector API
 - `@midnight-ntwrk/midnight-js-contracts` — contract deployment and calls
 - `@midnight-ntwrk/midnight-js-indexer-public-data-provider` — on-chain state queries
 - `@midnight-ntwrk/midnight-js-dapp-connector-proof-provider` — wallet-backed proof generation
@@ -219,7 +219,7 @@ Then run `compact compile contracts/Contract.compact src/contracts`. In this cas
 
 ## 2. Wallet, identity & providers
 
-You begin by setting up a wallet connection. For this you need DApp connector API v4 installed
+You begin by setting up a wallet connection. The project uses `@midnight-ntwrk/dapp-connector-api` at `^4.0.1`, which exposes the v4 wallet connector API.
 
 ```typescript
 import type { InitialAPI } from '@midnight-ntwrk/dapp-connector-api';
@@ -263,6 +263,8 @@ export function getCompatibleWallets(): InitialAPI[] {
   );
 }
 ```
+
+> `COMPATIBLE_CONNECTOR_API_VERSION` is `'4.x'`, matching the installed `@midnight-ntwrk/dapp-connector-api` at `^4.0.1`.
 
 Then create a wallet connection by calling:
 
@@ -379,7 +381,7 @@ Then build the smart contract using `CompiledContract` API from `@midnight-ntwrk
       const compiledContract = CompiledContract.withCompiledFileAssets(ccWithWitnesses, ZK_ARTIFACTS_PATH);
 ```
 
-> **Note on casts:** You will see `as any` and `as never` throughout the deploy, attest, and prove code. These work around SDK type-resolution friction at the `compact-js` / `midnight-js` boundary — the generated contract types and the provider types do not always align at compile time. They are safe at runtime, but they are not best practice for production code. If you are building your own DApp, prefer proper type narrowing or a thin wrapper over casting.
+> **Note on casts:** You will see `as any` and `as never` throughout the deploy, attest, and prove code. These work around SDK type-resolution friction at the `compact-js` / `midnight-js` boundary however the generated contract types and the provider types do not always align at compile time. They are safe at runtime, but they are not best practice for production code. If you are building your own DApp, use proper type narrowing or a thin wrapper over casting.
 
 Then the next step is to deploy, passing `authoritySk` as an argument. This makes the admin deploying the smart contract an authority with the ability to create attestations.
 
