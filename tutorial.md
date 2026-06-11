@@ -1,4 +1,4 @@
-📁 **Full source code and installation steps:** [midnight-apps/fullstack-dapp](https://github.com/0xfdbu/midnight-attestation-dapp)
+📁 **Full source code and installation steps:** [midnight-attestation-dapp](https://github.com/0xfdbu/midnight-attestation-dapp)
 
 **Target audience:** Developers
 
