@@ -97,7 +97,7 @@ With that mental model in place, the smart contract code below should land with 
 
 ## 1. Building the smart contract
 
-The contract targets Compact language version `0.22` and was compiled with the Compact compiler `0.5.1`.
+The contract targets Compact language version `0.22` and was compiled with the Compact compiler `0.30.0`.
 
 ```typescript
 pragma language_version 0.22;
