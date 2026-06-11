@@ -47,7 +47,7 @@ Run the frontend with `npm run dev`. If you want the analytics server, run `cd n
 ## Prerequisites
 
 - Node.js installed (v20+)
-- The Compact compiler installed (`compact --version`)
+- The Compact compiler installed
 - A Midnight wallet extension (e.g., 1AM or Lace)
 - Some Preprod [faucet](https://faucet.preprod.midnight.network/) NIGHT tokens
 - PostgreSQL if you want to run the analytics server
@@ -62,7 +62,7 @@ The project builds on the Midnight.js SDK. These packages handle the heavy lifti
 - `@midnight-ntwrk/midnight-js-dapp-connector-proof-provider` — wallet-backed proof generation
 - `@midnight-ntwrk/ledger-v8` — transaction serialization
 
-They are installed automatically with `npm install`. See [`package.json`](https://github.com/0xfdbu/midnight-attestation-dapp/blob/main/package.json) for the full list.
+Run `npm install` to install them automatically. See [`package.json`](https://github.com/0xfdbu/midnight-attestation-dapp/blob/main/package.json) for the full list.
 
 ## How the app works
 
@@ -81,7 +81,7 @@ There are three roles:
 | Total proof counters | Which commitment belongs to which user |
 | Nullifier set (prevents double-proving) | The actual credential data |
 
-> **Note:** The commitment value itself is visible as a public argument when the authority runs `attestAge`, `attestResidency`, or `attestCertification`. Once inserted, only the Merkle tree root is stored as public ledger state. Proof transactions do not reveal which commitment was proven.
+> **Note:** The commitment value itself is visible as a public argument when the authority runs `attestAge`. Once inserted, only the Merkle tree root is stored as public ledger state. Proof transactions do not reveal which commitment was proven.
 
 ### End-to-end flow
 
@@ -97,7 +97,7 @@ With that mental model in place, the smart contract code below should land with 
 
 ## 1. Building the smart contract
 
-The contract targets Compact language version `0.22` and was compiled with the Compact compiler `0.30.0`.
+The contract targets Compact language version `0.22` and was compiled with the Compact compiler version `0.30.0`.
 
 ```typescript
 pragma language_version 0.22;
@@ -396,7 +396,7 @@ Then build the smart contract using `CompiledContract` API from `@midnight-ntwrk
       const compiledContract = CompiledContract.withCompiledFileAssets(ccWithWitnesses, ZK_ARTIFACTS_PATH);
 ```
 
-> **Note on casts:** You will see `as any` and `as never` throughout the deploy, attest, and prove code. These work around SDK type-resolution friction at the `compact-js` / `midnight-js` boundary, but the generated contract types and the provider types do not always align at compile time. They are safe at runtime, but they are not best practice for production code. If you are building your own DApp, prefer proper type narrowing or a thin wrapper over casting.
+> **Note on casts:** You will see `as any` and `as never` throughout the deploy, attest, and prove code. These work around SDK type-resolution friction at the `compact-js` / `midnight-js` boundary, but the generated contract types and the provider types do not always align at compile time. They are safe at runtime, but they are not best practice for production code. If you are building your own DApp, use proper type narrowing or a thin wrapper over casting.
 
 Then the next step is to deploy, passing `authoritySk` as an argument. This makes the admin deploying the smart contract an authority with the ability to create attestations.
 
