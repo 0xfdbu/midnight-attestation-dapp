@@ -735,7 +735,7 @@ async function parseContractState(address: string, state: any) {
 
 ### Serving cached data
 
-The frontend sends a `GET /contract` request to retrieve the latest snapshot stored in the database. The endpoint joins the `contracts` and `contract_states` tables, returning the most recent row ordered by `recorded_at`.
+The frontend sends a `GET /contract` request to retrieve the latest snapshot stored in the database. The endpoint first queries the `contracts` table, then fetches the most recent row from `contract_states` ordered by `recorded_at`.
 
 ```typescript
 app.get('/contract', async (req, res) => {
