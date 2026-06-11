@@ -130,7 +130,17 @@ You also need some essential ledgers:
   export ledger totalAgeProofs: Counter;
   ```
 
-You also need a simple constructor to initialize the smart contract. **Constructor arguments are witness data** — in this case, `authoritySk`.
+You also need a `publicKey()` helper circuit. The constructor and attestation circuits both call it to derive an admin's public key from their secret key. It uses `persistentHash` with a domain separator so the key is deterministic and namespaced to this DApp.
+
+```typescript
+circuit publicKey(sk: Bytes<32>): Bytes<32> {
+    return persistentHash<Vector<2, Bytes<32>>>(
+        [pad(32, "mydapp:pk:v1"), sk]
+    );
+}
+```
+
+Then add a simple constructor to initialize the smart contract. **Constructor arguments are witness data** — in this case, `authoritySk`.
 
 ```typescript
 constructor(authoritySk: Bytes<32>) {
