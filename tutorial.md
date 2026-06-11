@@ -76,9 +76,12 @@ There are three roles:
 
 | Public (on-chain) | Private (off-chain / wallet) |
 |---|---|
-| Merkle root of attested commitments | User's secret key |
-| Total proof counts | Which commitment belongs to which user |
+| Merkle roots of the attestation trees | User's secret key |
+| Authority public key | User's password |
+| Total proof counters | Which commitment belongs to which user |
 | Nullifier set (prevents double-proving) | The actual credential data |
+
+> **Note:** The commitment value itself is visible as a public argument when the authority runs `attestAge`, `attestResidency`, or `attestCertification`. Once inserted, only the Merkle tree root is stored as public ledger state. Proof transactions do not reveal which commitment was proven.
 
 ### End-to-end flow
 
