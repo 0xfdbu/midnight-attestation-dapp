@@ -683,7 +683,7 @@ await sql`
 
 ### Polling lifecycle
 
-When you start the server, it calls `startPolling(TRACKED_CONTRACT)`. `TRACKED_CONTRACT` is a hardcoded `331460e632fad9146d23b2176433413e8405976afef8a6f0999dda10433f599d` smart contract value. It then begins fetching the current state and registers a `setInterval` loop repeating every 15 seconds. If the server shuts down, `stopPolling()` clears the interval and closes the database connection.
+When you start the server, it calls `startPolling(TRACKED_CONTRACT)`. `TRACKED_CONTRACT` is a hardcoded placeholder (`331460e632fad9146d23b2176433413e8405976afef8a6f0999dda10433f599d`) — replace it with your own deployed contract address before running the server. It then begins fetching the current state and registers a `setInterval` loop repeating every 15 seconds. If the server shuts down, `stopPolling()` clears the interval and closes the database connection.
 
 
 ```typescript
