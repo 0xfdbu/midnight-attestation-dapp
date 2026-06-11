@@ -72,7 +72,7 @@ There are three roles:
 - **User** — if someone wants to prove they meet the age requirements without revealing their exact age. In the frontend, this is the Prove flow.
 - **Verifier** — anyone who checks the zero-knowledge proof result on-chain. In this DApp, the verifier lives in the frontend and smart contract logic: the smart contract validates the proof, and anyone can read the public counters, e.g., `totalAgeProofs`.
 
-### What stays public vs private
+### What is public vs private
 
 | Public (on-chain) | Private (off-chain / wallet) |
 |---|---|
