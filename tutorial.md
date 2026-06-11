@@ -1,4 +1,4 @@
-📁 **Full source code and installation steps:** [midnight-apps/fullstack-dapp](https://github.com/0xfdbu/midnight-apps/tree/main/fullstack-dapp)
+📁 **Full source code and installation steps:** [midnight-apps/fullstack-dapp](https://github.com/0xfdbu/midnight-attestation-dapp)
 
 **Target audience:** Developers
 
@@ -9,7 +9,7 @@ Within the next few sections, you go through smart contract compilation and focu
 - Node.js installed (v20+)
 - A Midnight Wallet (e.g., 1AM or Lace)
 - Some Preprod [faucet](https://faucet.preprod.midnight.network/) NIGHT tokens
-- A [`package.json`](https://github.com/0xfdbu/midnight-apps/blob/main/fullstack-dapp/package.json) with the needed packages
+- A [`package.json`](https://github.com/0xfdbu/midnight-attestation-dapp/blob/main/package.json) with the needed packages
   - `@midnight-ntwrk/compact-runtime`
   - `@midnight-ntwrk/dapp-connector-api`
   - `@midnight-ntwrk/ledger-v8`
@@ -174,7 +174,7 @@ interface WalletSelectModalProps {
 }
 ```
 
-View the full [`WalletSelectModal.tsx`](https://github.com/0xfdbu/midnight-apps/blob/main/fullstack-dapp/src/components/ui/WalletSelectModal.tsx) on GitHub.
+View the full [`WalletSelectModal.tsx`](https://github.com/0xfdbu/midnight-attestation-dapp/blob/main/src/components/ui/WalletSelectModal.tsx) on GitHub.
 
 ```typescript
             {wallets.map((wallet) => {
@@ -185,7 +185,7 @@ View the full [`WalletSelectModal.tsx`](https://github.com/0xfdbu/midnight-apps/
 
 ![Wallet Selection UI](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/it8z72wbhmy0f5t72o0z.png)
 
-Create a Zustand hook in [`useWallet.ts`](https://github.com/0xfdbu/midnight-apps/blob/main/fullstack-dapp/src/hooks/useWallet.ts) to manage the wallet lifecycle. It is a Zustand store that manages the entire wallet lifecycle, and it scans for installed wallets.
+Create a Zustand hook in [`useWallet.ts`](https://github.com/0xfdbu/midnight-attestation-dapp/blob/main/src/hooks/useWallet.ts) to manage the wallet lifecycle. It is a Zustand store that manages the entire wallet lifecycle, and it scans for installed wallets.
 
 ```typescript
 // 1. Find injected wallets
@@ -222,7 +222,7 @@ This goes through a lock screen / session model, as shown below
 const masterKey = await deriveKeyFromPassword(userPassword, shieldedAddresses.shieldedCoinPublicKey);
 ```
 
-The most crucial step of this project is making sure the witnesses are correctly set up. You need a [witnesses.ts](https://github.com/0xfdbu/midnight-apps/blob/main/fullstack-dapp/src/pages/witnesses.ts) file for this.
+The most crucial step of this project is making sure the witnesses are correctly set up. You need a [witnesses.ts](https://github.com/0xfdbu/midnight-attestation-dapp/blob/main/src/pages/witnesses.ts) file for this.
 
 Point `index.js` to the path where you compiled the smart contract previously
 
@@ -291,7 +291,7 @@ You can now proceed to set up the providers, as shown below:
 
 ## 3. Deploy the smart contract
 
-You can now proceed to create [`Deploy.tsx`](https://github.com/0xfdbu/midnight-apps/blob/main/fullstack-dapp/src/pages/Deploy.tsx)
+You can now proceed to create [`Deploy.tsx`](https://github.com/0xfdbu/midnight-attestation-dapp/blob/main/src/pages/Deploy.tsx)
 
 Begin by setting the network — in this case, it's `preprod`
 
@@ -341,7 +341,7 @@ const address = deployed.deployTxData.public.contractAddress;
 
 A commitment is a tunnel between your private identity and the public ledger. It is a deterministic hash computed from the secret key (derived from `userPassword` + `shieldedAddresses.shieldedCoinPublicKey`) and a domain separator such as `age` (it could be anything — `residence`, etc.). Because the hash is one-way, anybody can see the commitment on-chain without learning your secret key. This is the core of the privacy model: the authority knows that you are attested but never learns who you are. **However**, be sure to force a strong password because an attacker can attempt to compute a similar commitment in many ways.
 
-Generate the commitment off-chain in [`Home.tsx`](https://github.com/0xfdbu/midnight-apps/blob/main/fullstack-dapp/src/pages/Home.tsx). The `getCommitment` circuit takes two inputs: your `secretKey` (passed as witness from your private state) and a `domain` such as `age`, `residency`, or `certification`. The domain acts as a namespace, so a commitment for `age` is completely different from a commitment for `residency` even when both use the same secret key.
+Generate the commitment off-chain in [`Home.tsx`](https://github.com/0xfdbu/midnight-attestation-dapp/blob/main/src/pages/Home.tsx). The `getCommitment` circuit takes two inputs: your `secretKey` (passed as witness from your private state) and a `domain` such as `age`, `residency`, or `certification`. The domain acts as a namespace, so a commitment for `age` is completely different from a commitment for `residency` even when both use the same secret key.
 
 ```typescript
       const commitment = contractModule.pureCircuits.getCommitment(
@@ -476,7 +476,7 @@ Now the user has a valid attestation under their unique `commitment`, which was 
 
 ## 6. Prove your eligibility
 
-The user verifies and generates a proof in [`Prove.tsx`](https://github.com/0xfdbu/midnight-apps/blob/main/fullstack-dapp/src/pages/Prove.tsx)
+The user verifies and generates a proof in [`Prove.tsx`](https://github.com/0xfdbu/midnight-attestation-dapp/blob/main/src/pages/Prove.tsx)
 
 `handleProve()` goes through a similar flow to `handleAttest()`, except that it calls the `proveAge()` circuit and uses `attestSk` instead of `authoritySk` for authentication.
 
@@ -695,7 +695,7 @@ You have now built a full-stack DApp on the Midnight network: a complete zero-kn
 
 Now that you've finished this tutorial, here are a few things you can do next:
 
-- Check the full repository [source code](https://github.com/0xfdbu/midnight-apps/tree/main/fullstack-dapp)
+- Check the full repository [source code](https://github.com/0xfdbu/midnight-attestation-dapp)
 - Add a new credential type e.g., "employment"
 - Read the Midnight Compact language docs
 
