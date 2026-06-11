@@ -48,7 +48,7 @@ Run the frontend with `npm run dev`. If you want the analytics server, run `cd n
 - The Compact compiler installed (`compact --version`)
 - A Midnight wallet extension (e.g., 1AM or Lace)
 - Some Preprod [faucet](https://faucet.preprod.midnight.network/) NIGHT tokens
-- (Optional) PostgreSQL if you want to run the analytics server
+- PostgreSQL if you want to run the analytics server
 
 ## Dependencies
 
@@ -68,7 +68,7 @@ There are three roles:
 
 - **Authority** — an organization that verifies a user's age off-chain and issues an on-chain attestation. In the frontend, this is the Deploy + Attest flow.
 - **User** — someone who wants to prove they meet the age requirement without revealing their identity or exact age. In the frontend, this is the Prove flow.
-- **Verifier** — anyone who checks the proof result on-chain. In this DApp, the verifier is built into the frontend and contract logic: the contract validates the proof, and anyone can read the public counters.
+- **Verifier** — anyone who checks the zero-knowledge proof result on-chain. In this DApp, the verifier is built into the frontend and smart contract logic: the smart contract validates the proof, and anyone can read the public counters.
 
 ### What stays public vs private
 
@@ -92,12 +92,17 @@ With that mental model in place, the contract code below should land with purpos
 
 ## 1. Building the smart contract
 
-For this attestation you need two core witnesses. `localSecretKey()` will be used to fetch the user's secret key, and `findAgePath(commit: Bytes<32>)` fetches the required cryptographic Merkle path from the local private state and passes it to the circuit(s) as needed.
+The contract targets Compact language version `0.22` and was compiled with the Compact compiler `0.5.1`.
 
 ```typescript
+pragma language_version 0.22;
+import CompactStandardLibrary;
+
 witness localSecretKey(): Bytes<32>;
 witness findAgePath(commit: Bytes<32>): MerkleTreePath<10, Bytes<32>>;
 ```
+
+For this attestation you need two core witnesses. `localSecretKey()` will be used to fetch the user's secret key, and `findAgePath(commit: Bytes<32>)` fetches the required cryptographic Merkle path from the local private state and passes it to the circuit(s) as needed.
 
 You also need some essential ledgers:
 
