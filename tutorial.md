@@ -13,8 +13,8 @@ You build a full-stack private age-verification DApp on Midnight. An authority c
 By the end of this tutorial, you have:
 
 - A Compact smart contract (`contracts/Contract.compact`) that stores age commitments in a Merkle tree, tracks nullifiers, and exposes `attestAge` and `proveAge` circuits.
-- A React frontend with flows for deploying the contract, generating a commitment, attesting a user, and generating a ZK proof.
-- An optional Express + PostgreSQL analytics server (`node-analytics/server.ts`) that polls the indexer and caches proof counts.
+- A React frontend with flows for deploying the smart contract, generating a commitment, attesting a user as the authority, and generating a ZK proof.
+- An Express + PostgreSQL analytics server (`node-analytics/server.ts`) that polls the indexer and caches proof counts.
 
 ## Project setup
 
@@ -97,7 +97,7 @@ With that mental model in place, the smart contract code below should land with 
 
 ## 1. Building the smart contract
 
-The contract targets Compact language version `0.22` and was compiled with the Compact compiler version `0.30.0`.
+The smart contract targets Compact language version `0.22` and was compiled with the Compact compiler version `0.30.0`.
 
 ```typescript
 pragma language_version 0.22;
@@ -771,7 +771,7 @@ Now the data is being successfully cached: `age=2 residency=1 cert=0`
 
 ## Conclusion
 
-You have now built a full-stack DApp on the Midnight network: a complete zero-knowledge attestation system. It consists of a Compact contract enforcing privacy-preserving zero-knowledge proofs, a UI that derives identities deterministically from nothing but a wallet's `shieldedAddresses.shieldedCoinPublicKey` and a user password, and an Express API that caches smart contract state. Your identity is not stored. If you lose your password, you lose your identity. Remember these critical design decisions.
+You have now built a full-stack DApp on the Midnight network: a complete zero-knowledge attestation system. It consists of a Compact smart contract enforcing privacy-preserving zero-knowledge proofs, a UI that derives identities deterministically from nothing but a wallet's `shieldedAddresses.shieldedCoinPublicKey` and a user password, and an Express API that caches smart contract state. Your identity is not stored. If you lose your password, you lose your identity. Remember these critical design decisions.
 
 ## Next steps
 
