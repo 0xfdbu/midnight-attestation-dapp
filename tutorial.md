@@ -117,7 +117,7 @@ You also need some essential ledgers:
   export sealed ledger authority: Bytes<32>;
   ```
 
-- **`ageCommitments`** uses `HistoricMerkleTree`. Think of it as a secure cryptographic folder. Use it instead of a list for privacy. Later, the user can mathematically prove their commitment is inside this tree without the blockchain knowing which leaf belongs to them.
+- **`ageCommitments`** uses `HistoricMerkleTree` to store commitments without revealing individual leaf values. A user can prove their commitment is in the tree without the blockchain knowing which leaf belongs to them.
 
   ```typescript
   export ledger ageCommitments: HistoricMerkleTree<10, Bytes<32>>;
