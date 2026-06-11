@@ -204,7 +204,7 @@ export circuit proveAge(): Boolean {
 }
 ```
 
-> **Note:** The example uses `domain` because the smart contract is set to handle multiple types of attestations (age, residency, certifications). Refer to the GitHub repo for more information.
+> **Note:** The `domain` parameter lets the same contract pattern extend to other attestation types — residency, certification, and so on. The full repo includes those circuits; this tutorial focuses on `age` to keep the walkthrough concise.
 
 You now need to compile this smart contract, but first install compact dev tools
 
