@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+*.tsbuildinfo
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# Deployment artifacts
+deployment.json
+
+# Midnight local state
+midnight-level-db/
+.wallet-state/
+
+# Vite
+.vite/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
