@@ -14,7 +14,7 @@ By the end of this tutorial, you have:
 
 - A Compact smart contract (`contracts/Contract.compact`) that stores age commitments in a Merkle tree, tracks nullifiers, and exposes `attestAge` and `proveAge` circuits.
 - A React frontend with flows for deploying the smart contract, generating a commitment, attesting a user as the authority, and generating a ZK proof.
-- An Express + PostgreSQL analytics server (`node-analytics/server.ts`) that polls the indexer and caches proof counts.
+- An Express + PostgreSQL backend server (`node-analytics/server.ts`) that polls the indexer and caches proof counts.
 
 ## Project setup
 
@@ -81,7 +81,7 @@ There are three roles:
 | Total proof counters | Which commitment belongs to which user |
 | Nullifier set (prevents double-proving) | The actual credential data |
 
-> **Note:** The commitment value itself is visible as a public argument when the authority runs `attestAge`. Once inserted, only the Merkle tree root is stored as public ledger state. Proof transactions do not reveal which commitment was proven.
+> **Note:** The commitment value itself is visible as a public argument when the authority runs `attestAge`. Once inserted, only the Merkle tree root is stored as public ledger state. Proof transactions e.g., `proveAge` do not reveal which commitment was proven.
 
 ### End-to-end flow
 
@@ -655,7 +655,7 @@ Use `setNetworkId('preprod')` to set the network to Preprod:
 ```typescript
 import { setNetworkId } from '@midnight-ntwrk/midnight-js-network-id';
 ```
-Import `compact-runtime`. `contractRuntime.ContractState.deserialize(serialized)` reconstructs a contract's state from its serialized bytes so you can read ledger data such as `totalAgeProofs`.
+Import `compact-runtime`. `contractRuntime.ContractState.deserialize(serialized)` reconstructs a smart contract's state from its serialized bytes so you can read ledger data such as `totalAgeProofs`.
 ```typescript
 import * as contractRuntime from '@midnight-ntwrk/compact-runtime';
 ```
