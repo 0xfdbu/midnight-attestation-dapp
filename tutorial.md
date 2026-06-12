@@ -8,7 +8,7 @@ Within the next few sections, you go through smart contract compilation and focu
 
 ## What you'll build
 
-You build a full-stack private age-verification DApp on Midnight. An authority can attest that a user meets an age requirement, and the user can later prove it with a zero-knowledge proof — without revealing their identity or age.
+You build a full-stack private age-verification DApp on Midnight. An authority can certify user's age off-chain, and the user can later prove it with a zero-knowledge proof — without revealing their identity or age.
 
 By the end of this tutorial, you have:
 
@@ -698,7 +698,7 @@ await sql`
 
 ### Polling lifecycle
 
-When you start the server, it calls `startPolling(TRACKED_CONTRACT)`. `TRACKED_CONTRACT` is a hardcoded placeholder (`331460e632fad9146d23b2176433413e8405976afef8a6f0999dda10433f599d`) — replace it with your own deployed contract address before running the server. It then begins fetching the current state and registers a `setInterval` loop repeating every 15 seconds. If the server shuts down, `stopPolling()` clears the interval and closes the database connection.
+When you start the server, it calls `startPolling(TRACKED_CONTRACT)`. `TRACKED_CONTRACT` is a hardcoded placeholder (`331460e632fad9146d23b2176433413e8405976afef8a6f0999dda10433f599d`) — *you replace it with your own deployed contract address before running the server*. It then begins fetching the current state and registers a `setInterval` loop repeating every 15 seconds. If the server shuts down, `stopPolling()` clears the interval and closes the database connection.
 
 
 ```typescript
