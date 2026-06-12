@@ -31,10 +31,10 @@ The finished project structure looks like this:
 ```text
 midnight-attestation-dapp/
 ├── contracts/
-│   └── Contract.compact              # ZK attestation contract
+│   └── Contract.compact              # ZK attestation smart contract
 ├── src/
 │   ├── pages/                        # React pages (Home, Deploy, Attest, Prove)
-│   ├── hooks/wallet/services/        # Provider builder, contract API, witness binding
+│   ├── hooks/wallet/services/        # Provider builder, smart contract API, witness binding
 │   └── components/                   # Wallet UI components
 ├── node-analytics/
 │   └── server.ts                     # Off-chain indexer polling API
