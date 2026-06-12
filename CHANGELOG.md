@@ -10,7 +10,7 @@ Changes made when extracting the `fullstack-dapp` tutorial from the `midnight-ap
 |---|---|---|
 | Repository | Subfolder of `0xfdbu/midnight-apps` | Standalone `0xfdbu/midnight-attestation-dapp` |
 | File | `fullstack-dapp/tutorial.md` | `midnight-attestation-dapp/tutorial.md` |
-| Word count | ~2,800 words | ~4,400 words |
+| Word count | ~3,723 words | ~4,438 words |
 
 ---
 
