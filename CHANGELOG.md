@@ -123,4 +123,4 @@ Changes made when extracting the `fullstack-dapp` tutorial from the `midnight-ap
 |---|---|---|---|
 | `TRACKED_CONTRACT` placeholder | Concrete hash shown | `''` empty string in code | Tutorial uses concrete example for visibility |
 | Analytics server routes | Only `/contract` shown | Also has `/status`, `/track/:address`, `DELETE /contract/:address` | Tutorial focuses on core flow |
-| `initDb()` behavior | Not detailed | Drops and recreates tables | Omitted for brevity |
+| `initDb()` behaviour | Not detailed | Drops and recreates tables | Omitted for brevity |

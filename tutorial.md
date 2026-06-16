@@ -145,7 +145,7 @@ circuit publicKey(sk: Bytes<32>): Bytes<32> {
 }
 ```
 
-Then add a simple constructor to initialize the smart contract. **Constructor arguments are witness data** — in this case, `authoritySk`.
+Then add a simple constructor to initialise the smart contract. **Constructor arguments are witness data** — in this case, `authoritySk`.
 
 ```typescript
 constructor(authoritySk: Bytes<32>) {
@@ -454,7 +454,7 @@ The provider bundle is the bridge between your frontend and the Midnight network
 - `publicDataProvider` reads on-chain data from the indexer without submitting transactions
 - `zkConfigProvider` loads the compiled ZK circuit artifacts (proving keys, verifier keys)
 - `proofProvider` forwards proof-generation requests to your local proof server on port 6300
-- `walletProvider` handles transaction balancing: it serializes the unsigned transaction, sends it to your wallet extension for fee coverage and signing, then returns the balanced transaction
+- `walletProvider` handles transaction balancing: it serialises the unsigned transaction, sends it to your wallet extension for fee coverage and signing, then returns the balanced transaction
 - `midnightProvider` submits the final signed transaction to the network and returns the transaction identifier
 
 ```typescript
@@ -509,7 +509,7 @@ Reconstruct the deployed smart contract's runtime interface. This is a three-ste
 
 `findDeployedContract()` serves multiple purposes. It fetches the on-chain smart contract state, then extracts the embedded verifier keys and compares them head-to-head with the compiled artifacts generated after running `compact contracts/Contract.compact {compile_path}`. If there is a mismatch between the verifier keys, it throws an error instead of proceeding. This acts like protection against accidentally interacting with the wrong smart contract.
 
-`findDeployedContract()` also initializes your local private state. Pass `authoritySk` to `createAttestPrivateState()` so the witness `localSecretKey()` resolves correctly when the circuit runs. If the private state ID collides with another role — for example, the prover state — the authentication step would fail with an error, so keeping `attestState` separate is crucial.
+`findDeployedContract()` also initialises your local private state. Pass `authoritySk` to `createAttestPrivateState()` so the witness `localSecretKey()` resolves correctly when the circuit runs. If the private state ID collides with another role — for example, the prover state — the authentication step would fail with an error, so keeping `attestState` separate is crucial.
 
 ```typescript
       await findDeployedContract(providers as never, {
@@ -605,13 +605,13 @@ Execution successful
 
 The wallet returns `Proof already used — each credential can only be proven once`. The console shows: `Prove error: Error: Unexpected error executing scoped transaction '<unnamed>': Error: failed assert: Age proof already used`
 
-This means the smart contract is working exactly as intended — the `nullifier` is recognized as already used.
+This means the smart contract is working exactly as intended — the `nullifier` is recognised as already used.
 
 ![Proof Already Used Error](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/x2u5eh48ux62f4fl2err.png)
 
 ## 7. State read flow
 
-When you unlock the Home page, it checks whether you are an authority or not. It does this by querying the smart contract state from the indexer. The raw state data is fed into `contractModule.ledger()`, which deserializes it into typed ledger fields, including `authority: Bytes<32>`.
+When you unlock the Home page, it checks whether you are an authority or not. It does this by querying the smart contract state from the indexer. The raw state data is fed into `contractModule.ledger()`, which deserialises it into typed ledger fields, including `authority: Bytes<32>`.
 
 
 ```typescript
@@ -655,7 +655,7 @@ Use `setNetworkId('preprod')` to set the network to Preprod:
 ```typescript
 import { setNetworkId } from '@midnight-ntwrk/midnight-js-network-id';
 ```
-Import `compact-runtime`. `contractRuntime.ContractState.deserialize(serialized)` reconstructs a smart contract's state from its serialized bytes so you can read ledger data such as `totalAgeProofs`.
+Import `compact-runtime`. `contractRuntime.ContractState.deserialize(serialized)` reconstructs a smart contract's state from its serialised bytes so you can read ledger data such as `totalAgeProofs`.
 ```typescript
 import * as contractRuntime from '@midnight-ntwrk/compact-runtime';
 ```
@@ -720,7 +720,7 @@ function startPolling(address: string) {
 
 ### Parsing and inserting state
 
-The generated smart contract code cannot read raw states returned by the indexer GraphQL V4 endpoint. They must first be serialized back into bytes, then deserialized through `ContractState.deserialize()`. This is when `@midnight-ntwrk/compact-runtime` comes in. Finally, the state is passed to `ledger()` to extract fields such as `totalAgeProofs` (number of age proofs committed), and then the `insertState()` function inserts the values into the PostgreSQL database `contract_states` table.
+The generated smart contract code cannot read raw states returned by the indexer GraphQL V4 endpoint. They must first be serialised back into bytes, then deserialised through `ContractState.deserialize()`. This is when `@midnight-ntwrk/compact-runtime` comes in. Finally, the state is passed to `ledger()` to extract fields such as `totalAgeProofs` (number of age proofs committed), and then the `insertState()` function inserts the values into the PostgreSQL database `contract_states` table.
 
 ```typescript
 async function parseContractState(address: string, state: any) {
