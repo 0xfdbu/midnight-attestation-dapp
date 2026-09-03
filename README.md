@@ -2,6 +2,8 @@
 
 A Midnight Network credential attestation DApp with privacy-preserving ZK proofs.
 
+📖 **[Read the full tutorial](./tutorial.md)** for step-by-step setup and architecture details.
+
 ## Features
 
 - **Authority Attestations**: Authority attests users for age, residency, or certification credentials
